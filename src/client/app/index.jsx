@@ -9,79 +9,6 @@ class App extends Component {
     constructor(props) {
         super(props)
 
-        this.handsontableData = {
-            body: [
-                {
-                    "1" : {
-                        "value" : "1992"
-                    },
-                    "2" : {
-                        "value" : "11"
-                    },
-                    "3" : {
-                        "value" : "12"
-                    },
-                    "4" : {
-                        "value" : "66"
-                    },
-                },
-                {
-                    "1" : {
-                        "value" : "1993"
-                    },
-                    "2" : {
-                        "value" : "14"
-                    },
-                    "3" : {
-                        "value" : "15"
-                    },
-                    "4" : {
-                        "value" : "55"
-                    },
-                },
-                {
-                    "1" : {
-                        "value" : "1995"
-                    },
-                    "2" : {
-                        "value" : "98"
-                    },
-                    "3" : {
-                        "value" : "55"
-                    },
-                    "4" : {
-                        "value" : "0"
-                    },
-                },
-            ],
-            header: {
-                colHeaders: [
-                    "A",
-                    "B",
-                    "C",
-                    "D",
-                ],
-                columns: [
-                    {
-                        "data" : "1.value",
-                        "type" : "text",
-                    },
-                    {
-                        "data" : "2.value",
-                        "type" : "text",
-                    },
-                    {
-                        "data" : "3.value",
-                        "type" : "text",
-                    },
-                    {
-                        "data" : "4.value",
-                        "type" : "text",
-                    },
-                ],
-            },
-        }
-
         this.selectData = [
             {
                 label: '1',
@@ -97,10 +24,46 @@ class App extends Component {
             },
         ]
 
+        this.masterData = [
+            {
+                value: '1',
+                label: 'label1',
+            },
+            {
+                value: '2',
+                label: 'label2',
+            },
+            {
+                value: '3',
+                label: 'label3',
+            },
+        ]
+
         this.handleSelectChange = this.handleSelectChange.bind(this)
+        this.coverRender = this.coverRender.bind(this)
 
         this.state = {
             suggestedValue: ''
+        }
+    }
+
+    coverRender(instance, td, row, col, prop, value, cellProperties) {
+        let values
+
+        if (value) {
+            let labels = []
+
+            values = value.split('+')
+
+            values.forEach(v => {
+                let targetObj = this.masterData.find(obj => obj.value.toString() === v.toString())
+
+                if (targetObj) {
+                    labels.push(targetObj.label)
+                }
+            })
+
+            td.innerHTML = labels.toString()
         }
     }
 
@@ -117,8 +80,89 @@ class App extends Component {
                 <HotTable
                     ref="hot"
                     root="hot"
-                    data={this.handsontableData.body}
-                    colHeaders={this.handsontableData.header.colHeaders}
+                    data={[
+                        {
+                            "1": {
+                                "value": true
+                            },
+                            "2": {
+                                "value": "11"
+                            },
+                            "3": {
+                                "value": "12"
+                            },
+                            "4": {
+                                "value": "1+2"
+                            },
+                        },
+                        {
+                            "1": {
+                                "value": false
+                            },
+                            "2": {
+                                "value": "14"
+                            },
+                            "3": {
+                                "value": "15"
+                            },
+                            "4": {
+                                "value": "2"
+                            },
+                        },
+                        {
+                            "1": {
+                                "value": true
+                            },
+                            "2": {
+                                "value": "98"
+                            },
+                            "3": {
+                                "value": "55"
+                            },
+                            "4": {
+                                "value": ""
+                            },
+                        },
+                        {
+                            "1": {
+                                "value": true
+                            },
+                            "2": {
+                                "value": "98"
+                            },
+                            "3": {
+                                "value": "55"
+                            },
+                            "4": {
+                                "value": null
+                            },
+                        },
+                    ]}
+                    colHeaders={[
+                        "A",
+                        "B",
+                        "C",
+                        "D",
+                    ]}
+                    columns={[
+                        {
+                            "data": "1.value",
+                            "type": "checkbox",
+                        },
+                        {
+                            "data": "2.value",
+                            "type": "text",
+                        },
+                        {
+                            "data": "3.value",
+                            "type": "dropdown",
+                            source: ['yellow', 'red']
+                        },
+                        {
+                            "data": "4.value",
+                            renderer: this.coverRender
+                        },
+                    ]}
                     rowHeaders={true}
                     width="600"
                     height="300"
