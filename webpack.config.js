@@ -10,6 +10,7 @@ var config = {
         path: BUILD_DIR,
         filename: 'bundle.js'
     },
+    devtool: 'source-map',
     devServer: {
         contentBase: path.resolve(__dirname, 'src/client/public'),
         historyApiFallback: true,
@@ -21,8 +22,16 @@ var config = {
             {
                 test: /\.(js|jsx)$/,
                 include: APP_DIR,
-                loader: 'babel-loader'
-            }
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015', 'react', 'stage-0']
+                },
+            },
+            {
+                test: /\.(css|less)$/,
+                loader: 'style-loader!css-loader!less-loader'
+            },
         ]
     }
 };
