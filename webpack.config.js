@@ -17,6 +17,11 @@ var config = {
         inline: true,
         port: 3002
     },
+    resolve: {
+        alias: {
+            handsontable: path.resolve(__dirname, 'node_modules/handsontable'),
+        }
+    },
     module: {
         loaders: [
             {
